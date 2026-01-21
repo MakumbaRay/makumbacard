@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Agregar Tarjeta - Netlify</title>
+  <title>Demo Autoguardado de Tarjeta (Autofill)</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -23,7 +23,7 @@
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
       padding: 30px;
       width: 100%;
-      max-width: 800px;
+      max-width: 900px;
       position: relative;
       overflow: hidden;
     }
@@ -52,17 +52,18 @@
     .card-header {
       display: flex;
       align-items: center;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
       position: relative;
       z-index: 2;
+      gap: 12px;
     }
     .card-header h1 {
-      font-size: 24px;
-      font-weight: 600;
+      font-size: 20px;
+      font-weight: 650;
       margin: 0;
       flex-grow: 1;
     }
-    .card-header .netlify-logo {
+    .netlify-logo {
       width: 40px;
       height: 40px;
       background-color: #00c7b7;
@@ -72,33 +73,50 @@
       justify-content: center;
       font-weight: bold;
       color: #0a192f;
+      flex: 0 0 auto;
     }
-    .card-form {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
+    .subtitle {
+      position: relative;
+      z-index: 2;
+      margin: 0 0 18px 0;
+      color: rgba(255,255,255,0.85);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 22px;
       position: relative;
       z-index: 2;
     }
+
+    .card-form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: flex-start;
+    }
     .form-group {
       flex: 1;
-      min-width: 200px;
+      min-width: 220px;
     }
     .form-group label {
       display: block;
       margin-bottom: 8px;
-      font-size: 14px;
-      color: rgba(255, 255, 255, 0.8);
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.85);
     }
     .form-group input {
       width: 100%;
-      padding: 12px 15px;
+      padding: 12px 14px;
       background-color: rgba(255, 255, 255, 0.1);
       border: 1px solid rgba(255, 255, 255, 0.2);
       border-radius: 8px;
       color: #ffffff;
-      font-size: 16px;
-      transition: all 0.3s ease;
+      font-size: 15px;
+      transition: all 0.2s ease;
       box-sizing: border-box;
     }
     .form-group input:focus {
@@ -110,315 +128,390 @@
     .form-group input::placeholder {
       color: rgba(255, 255, 255, 0.5);
     }
-    .form-group .expiry-group {
+    .expiry-group {
       display: flex;
       gap: 10px;
     }
-    .form-group .expiry-group input {
-      flex: 1;
+    .expiry-group input { flex: 1; }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+      flex-wrap: wrap;
     }
-    .submit-btn {
+    .btn {
+      border: none;
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-weight: 650;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+      font-size: 14px;
+    }
+    .btn-primary {
       background-color: #00c7b7;
       color: #0a192f;
-      border: none;
-      padding: 12px 30px;
-      border-radius: 8px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      margin-top: 10px;
-      width: 100%;
+      flex: 1;
+      min-width: 220px;
     }
-    .submit-btn:hover {
+    .btn-primary:hover {
       background-color: #00e5cc;
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(0, 199, 183, 0.3);
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(0, 199, 183, 0.25);
     }
+    .btn-secondary {
+      background-color: rgba(255,255,255,0.14);
+      color: rgba(255,255,255,0.92);
+      border: 1px solid rgba(255,255,255,0.22);
+      min-width: 220px;
+    }
+    .btn-secondary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.15);
+    }
+
+    .options {
+      width: 100%;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+      color: rgba(255,255,255,0.85);
+      font-size: 13px;
+    }
+    .options label {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      user-select: none;
+    }
+
     .card-preview {
-      margin-top: 30px;
       background: linear-gradient(135deg, #0a192f 0%, #172a45 100%);
       border-radius: 15px;
-      padding: 25px;
-      position: relative;
-      z-index: 2;
-      min-height: 200px;
+      padding: 20px;
+      min-height: 210px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      border: 1px solid rgba(255,255,255,0.12);
     }
     .card-chip {
       width: 50px;
       height: 40px;
       background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
       border-radius: 8px;
-      margin-bottom: 20px;
+      margin-bottom: 14px;
     }
     .card-number-preview {
-      font-size: 22px;
+      font-size: 20px;
       letter-spacing: 2px;
-      margin-bottom: 20px;
-      font-family: monospace;
+      margin-bottom: 16px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     }
     .card-details {
-      display: flex;
-      justify-content: space-between;
+      display: grid;
+      grid-template-columns: 1fr auto;
       gap: 10px;
+      align-items: end;
     }
-    .card-expiry-preview, .card-cvc-preview, .card-name-preview {
-      font-size: 14px;
-      opacity: 0.9;
+    .small {
+      font-size: 12px;
+      opacity: 0.85;
+    }
+
+    .success-message, .error-message {
+      display: none;
+      border-radius: 8px;
+      padding: 12px;
+      margin-top: 14px;
+      text-align: center;
     }
     .success-message {
-      display: none;
-      background-color: rgba(0, 199, 183, 0.2);
-      border: 1px solid #00c7b7;
-      border-radius: 8px;
-      padding: 15px;
-      margin-top: 20px;
-      text-align: center;
-      position: relative;
-      z-index: 2;
+      background-color: rgba(0, 199, 183, 0.18);
+      border: 1px solid rgba(0, 199, 183, 0.8);
     }
     .error-message {
-      display: none;
-      background-color: rgba(255, 0, 0, 0.2);
-      border: 1px solid #ff4444;
-      border-radius: 8px;
-      padding: 15px;
-      margin-top: 20px;
-      text-align: center;
-      position: relative;
-      z-index: 2;
+      background-color: rgba(255, 0, 0, 0.18);
+      border: 1px solid rgba(255, 68, 68, 0.85);
     }
-    @media (max-width: 768px) {
-      .card-form {
-        flex-direction: column;
-      }
-      .form-group {
-        min-width: 100%;
-      }
+
+    .note {
+      margin-top: 14px;
+      font-size: 12px;
+      opacity: 0.8;
+      line-height: 1.35;
+    }
+
+    @media (max-width: 900px) {
+      .grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
   <div class="card-container">
     <div class="card-header">
-      <h1>Agregar Tarjeta</h1>
       <div class="netlify-logo">N</div>
+      <h1>Demo: “Guardar tarjeta” (Autofill del navegador)</h1>
     </div>
 
-    <form class="card-form" name="payment" method="POST" data-netlify="true" id="payment-form" autocomplete="on">
-      <input type="hidden" name="form-name" value="payment" />
+    <p class="subtitle">
+      Objetivo: ayudar al navegador a reconocer campos de pago usando <b>autocomplete</b> estándar (HTML5).
+      El popup depende del navegador (Chrome/Brave/etc.) y de sus heurísticas; no se puede forzar con JS.
+      Usa datos de prueba.
+    </p>
 
-      <div class="form-group">
-        <label for="card-number">Número de Tarjeta</label>
-        <input
-          type="text"
-          id="card-number"
-          name="card-number"
-          placeholder="1234 5678 9012 3456"
-          maxlength="19"
-          required
-          autocomplete="cc-number"
-          inputmode="numeric"
-        />
+    <div class="grid">
+      <div>
+        <!-- IMPORTANTE:
+             - Para disparar el popup con más consistencia, es mejor un submit real (sin preventDefault).
+             - Por eso permitimos "Submit real" hacia un endpoint local /submit (ver server.js).
+        -->
+        <form
+          class="card-form"
+          id="payment-form"
+          autocomplete="on"
+          method="POST"
+          action="/submit"
+        >
+          <div class="form-group">
+            <label for="card-number">Número de tarjeta</label>
+            <input
+              type="text"
+              id="card-number"
+              name="card-number"
+              placeholder="1234 5678 9012 3456"
+              maxlength="19"
+              required
+              autocomplete="cc-number"
+              inputmode="numeric"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="cardholder-name">Nombre del titular</label>
+            <input
+              type="text"
+              id="cardholder-name"
+              name="cardholder-name"
+              placeholder="Juan Pérez"
+              required
+              autocomplete="cc-name"
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Fecha de vencimiento</label>
+            <div class="expiry-group">
+              <input
+                type="text"
+                id="expiry-month"
+                name="expiry-month"
+                placeholder="MM"
+                maxlength="2"
+                required
+                autocomplete="cc-exp-month"
+                inputmode="numeric"
+              />
+              <input
+                type="text"
+                id="expiry-year"
+                name="expiry-year"
+                placeholder="AA"
+                maxlength="2"
+                required
+                autocomplete="cc-exp-year"
+                inputmode="numeric"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="cvc">CVC (opcional)</label>
+            <input
+              type="text"
+              id="cvc"
+              name="cvc"
+              placeholder="123"
+              maxlength="4"
+              autocomplete="cc-csc"
+              inputmode="numeric"
+            />
+          </div>
+
+          <div class="actions">
+            <button type="submit" class="btn btn-primary" id="submitBtn">Enviar (flujo real)</button>
+            <button type="button" class="btn btn-secondary" id="fillTest">Rellenar datos de prueba</button>
+          </div>
+
+          <div class="options">
+            <label>
+              <input type="checkbox" id="demoMode" checked />
+              Solo demo (no enviar, puede que NO salga el popup)
+            </label>
+          </div>
+
+          <div class="success-message" id="success-message"></div>
+          <div class="error-message" id="error-message"></div>
+
+          <div class="note">
+            Seguridad: no uses tarjetas reales. Esto es una demo para explicar heurísticas de autofill.
+            En producción, los pagos se hacen con proveedores (Stripe/PayPal) y tokenización.
+          </div>
+        </form>
       </div>
 
-      <div class="form-group">
-        <label for="cardholder-name">Nombre del Titular</label>
-        <input
-          type="text"
-          id="cardholder-name"
-          name="cardholder-name"
-          placeholder="Juan Pérez"
-          required
-          autocomplete="cc-name"
-        />
-      </div>
-
-      <div class="form-group">
-        <label for="expiry-month">Fecha de Vencimiento</label>
-        <div class="expiry-group">
-          <input
-            type="text"
-            id="expiry-month"
-            name="expiry-month"
-            placeholder="MM"
-            maxlength="2"
-            required
-            autocomplete="cc-exp-month"
-            inputmode="numeric"
-          />
-          <input
-            type="text"
-            id="expiry-year"
-            name="expiry-year"
-            placeholder="AA"
-            maxlength="2"
-            required
-            autocomplete="cc-exp-year"
-            inputmode="numeric"
-          />
+      <div class="card-preview" aria-label="Vista previa de tarjeta">
+        <div>
+          <div class="card-chip"></div>
+          <div class="card-number-preview" id="card-number-preview">•••• •••• •••• ••••</div>
+        </div>
+        <div class="card-details">
+          <div>
+            <div class="small">TITULAR</div>
+            <div id="card-name-preview">NOMBRE APELLIDO</div>
+          </div>
+          <div style="text-align:right;">
+            <div class="small">VENCE</div>
+            <div id="card-expiry-preview">MM/AA</div>
+            <div class="small" style="margin-top:6px;">CVC</div>
+            <div id="card-cvc-preview">•••</div>
+          </div>
         </div>
       </div>
-
-      <div class="form-group">
-        <label for="cvc">CVC (Opcional)</label>
-        <input
-          type="text"
-          id="cvc"
-          name="cvc"
-          placeholder="123"
-          maxlength="4"
-          autocomplete="cc-csc"
-          inputmode="numeric"
-        />
-      </div>
-
-      <div class="form-group">
-        <button type="submit" class="submit-btn">Guardar Tarjeta</button>
-      </div>
-    </form>
-
-    <div class="card-preview">
-      <div class="card-chip"></div>
-
-      <div class="card-number-preview" id="card-number-preview">•••• •••• •••• ••••</div>
-
-      <div class="card-details">
-        <div class="card-name-preview" id="card-name-preview">NOMBRE APELLIDO</div>
-        <div class="card-expiry-preview" id="card-expiry-preview">MM/AA</div>
-        <div class="card-cvc-preview" id="card-cvc-preview">•••</div>
-      </div>
     </div>
-
-    <div class="success-message" id="success-message"></div>
-    <div class="error-message" id="error-message"></div>
-
-    <!-- Nota (opcional para la tarea) -->
-    <!-- En producción NO se deben capturar datos de tarjeta con formularios propios. -->
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const cardNumberEl = document.getElementById('card-number');
-      const expiryMonthEl = document.getElementById('expiry-month');
-      const expiryYearEl = document.getElementById('expiry-year');
-      const cvcEl = document.getElementById('cvc');
-      const nameEl = document.getElementById('cardholder-name');
-
-      const numberPreview = document.getElementById('card-number-preview');
-      const expiryPreview = document.getElementById('card-expiry-preview');
-      const cvcPreview = document.getElementById('card-cvc-preview');
-      const namePreview = document.getElementById('card-name-preview');
-
+    document.addEventListener('DOMContentLoaded', () => {
       const form = document.getElementById('payment-form');
 
-      // Número: agrupa en bloques de 4
-      cardNumberEl.addEventListener('input', function (e) {
-        let value = e.target.value.replace(/\s/g, '').replace(/\D/g, '');
-        let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
-        e.target.value = formattedValue;
-        numberPreview.textContent = formattedValue || '•••• •••• •••• ••••';
+      const cardNumberEl = document.getElementById('card-number');
+      const nameEl = document.getElementById('cardholder-name');
+      const monthEl = document.getElementById('expiry-month');
+      const yearEl = document.getElementById('expiry-year');
+      const cvcEl = document.getElementById('cvc');
+
+      const numberPreview = document.getElementById('card-number-preview');
+      const namePreview = document.getElementById('card-name-preview');
+      const expPreview = document.getElementById('card-expiry-preview');
+      const cvcPreview = document.getElementById('card-cvc-preview');
+
+      const demoModeEl = document.getElementById('demoMode');
+      const fillTestBtn = document.getElementById('fillTest');
+
+      const successMessage = document.getElementById('success-message');
+      const errorMessage = document.getElementById('error-message');
+
+      function showMessage(type, msg) {
+        successMessage.style.display = 'none';
+        errorMessage.style.display = 'none';
+        if (type === 'success') {
+          successMessage.textContent = msg;
+          successMessage.style.display = 'block';
+        } else {
+          errorMessage.textContent = msg;
+          errorMessage.style.display = 'block';
+        }
+        setTimeout(() => {
+          successMessage.style.display = 'none';
+          errorMessage.style.display = 'none';
+        }, 4500);
+      }
+
+      function updateExpiryPreview() {
+        const m = monthEl.value;
+        const y = yearEl.value;
+        expPreview.textContent = (m && y) ? `${m}/${y}` : 'MM/AA';
+      }
+
+      // Formateos + preview
+      cardNumberEl.addEventListener('input', (e) => {
+        let v = e.target.value.replace(/\s/g, '').replace(/\D/g, '');
+        v = v.slice(0, 16);
+        const formatted = v.match(/.{1,4}/g)?.join(' ') || v;
+        e.target.value = formatted;
+        numberPreview.textContent = formatted || '•••• •••• •••• ••••';
       });
 
-      // Nombre: preview
-      nameEl.addEventListener('input', function (e) {
+      nameEl.addEventListener('input', (e) => {
         const v = e.target.value.trim();
         namePreview.textContent = v ? v.toUpperCase() : 'NOMBRE APELLIDO';
       });
 
-      // Fecha: preview
-      function updateExpiryPreview() {
-        const m = expiryMonthEl.value;
-        const y = expiryYearEl.value;
-        expiryPreview.textContent = (m && y) ? `${m}/${y}` : 'MM/AA';
-      }
-
-      expiryMonthEl.addEventListener('input', function (e) {
-        let v = e.target.value.replace(/\D/g, '').slice(0, 2);
+      monthEl.addEventListener('input', (e) => {
+        let v = e.target.value.replace(/\D/g, '').slice(0,2);
         e.target.value = v;
         updateExpiryPreview();
       });
 
-      expiryYearEl.addEventListener('input', function (e) {
-        let v = e.target.value.replace(/\D/g, '').slice(0, 2);
+      yearEl.addEventListener('input', (e) => {
+        let v = e.target.value.replace(/\D/g, '').slice(0,2);
         e.target.value = v;
         updateExpiryPreview();
       });
 
-      // CVC: preview con puntos
-      cvcEl.addEventListener('input', function (e) {
-        let v = e.target.value.replace(/\D/g, '').slice(0, 4);
+      cvcEl.addEventListener('input', (e) => {
+        let v = e.target.value.replace(/\D/g, '').slice(0,4);
         e.target.value = v;
         cvcPreview.textContent = v ? '•'.repeat(v.length) : '•••';
       });
 
-      form.addEventListener('submit', function (e) {
-        e.preventDefault();
+      // Botón para datos de prueba (evita datos reales)
+      fillTestBtn.addEventListener('click', () => {
+        // Visa test común (no real): 4111 1111 1111 1111
+        cardNumberEl.value = '4111 1111 1111 1111';
+        nameEl.value = 'JUAN PEREZ';
+        monthEl.value = '10';
+        yearEl.value = '28';
+        cvcEl.value = '123';
 
-        const cardNumber = cardNumberEl.value.replace(/\s/g, '');
-        const expiryMonth = expiryMonthEl.value;
-        const expiryYear = expiryYearEl.value;
-        const cvc = cvcEl.value;
-        const cardholderName = nameEl.value.trim();
-
-        if (cardNumber.length < 13) {
-          showMessage('error', 'Por favor, ingresa un número de tarjeta válido.');
-          return;
-        }
-
-        const monthNum = parseInt(expiryMonth, 10);
-        if (Number.isNaN(monthNum) || monthNum < 1 || monthNum > 12 || expiryMonth.length !== 2) {
-          showMessage('error', 'El mes debe estar entre 01 y 12.');
-          return;
-        }
-
-        const yearNum = parseInt(expiryYear, 10);
-        if (Number.isNaN(yearNum) || expiryYear.length !== 2) {
-          showMessage('error', 'Ingresa un año válido en formato AA.');
-          return;
-        }
-
-        if (!cardholderName) {
-          showMessage('error', 'Por favor, ingresa el nombre del titular de la tarjeta.');
-          return;
-        }
-
-        // Simulación de envío (solo demo)
-        setTimeout(function () {
-          showMessage('success', '¡Tarjeta agregada exitosamente!');
-
-          form.reset();
-
-          numberPreview.textContent = '•••• •••• •••• ••••';
-          namePreview.textContent = 'NOMBRE APELLIDO';
-          expiryPreview.textContent = 'MM/AA';
-          cvcPreview.textContent = '•••';
-        }, 700);
+        // Disparar previews
+        numberPreview.textContent = cardNumberEl.value;
+        namePreview.textContent = nameEl.value;
+        updateExpiryPreview();
+        cvcPreview.textContent = '•••';
+        showMessage('success', 'Datos de prueba cargados. Ahora prueba enviar.');
       });
 
-      function showMessage(type, message) {
-        const successMessage = document.getElementById('success-message');
-        const errorMessage = document.getElementById('error-message');
-
-        successMessage.style.display = 'none';
-        errorMessage.style.display = 'none';
-
-        if (type === 'success') {
-          successMessage.textContent = message;
-          successMessage.style.display = 'block';
-        } else {
-          errorMessage.textContent = message;
-          errorMessage.style.display = 'block';
+      // Submit: dos modos
+      form.addEventListener('submit', (e) => {
+        // Validación mínima
+        const raw = cardNumberEl.value.replace(/\s/g, '');
+        if (raw.length < 13) {
+          e.preventDefault();
+          showMessage('error', 'Número de tarjeta inválido (demo).');
+          return;
+        }
+        const m = parseInt(monthEl.value, 10);
+        if (!monthEl.value || Number.isNaN(m) || m < 1 || m > 12 || monthEl.value.length !== 2) {
+          e.preventDefault();
+          showMessage('error', 'Mes inválido (01–12).');
+          return;
+        }
+        if (!yearEl.value || yearEl.value.length !== 2) {
+          e.preventDefault();
+          showMessage('error', 'Año inválido (AA).');
+          return;
+        }
+        if (!nameEl.value.trim()) {
+          e.preventDefault();
+          showMessage('error', 'Nombre del titular requerido.');
+          return;
         }
 
-        setTimeout(function () {
-          successMessage.style.display = 'none';
-          errorMessage.style.display = 'none';
-        }, 5000);
-      }
+        // Modo demo: no enviamos (pero puede que no salga el popup)
+        if (demoModeEl.checked) {
+          e.preventDefault();
+          showMessage('success', 'Demo OK. Nota: el popup puede no salir sin submit real.');
+          return;
+        }
+
+        // Modo real: NO hacemos preventDefault.
+        // Dejamos que el navegador haga un submit real a /submit (servidor local).
+        // Esto suele disparar mejor la sugerencia de “guardar tarjeta”.
+      });
     });
   </script>
 </body>
